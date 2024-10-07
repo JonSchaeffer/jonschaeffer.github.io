@@ -8,13 +8,16 @@
     <language>en-gb</language>
     <lastBuildDate>Thu, 03 Oct 2024 22:48:27 -0400</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Migrating from Bitbucket to Github</title>
-      <link>http://localhost:1313/posts/my-first-post/</link>
+      <title>Bitbucket to Github Migration Tool (bb2gh)</title>
+      <link>http://localhost:1313/posts/bitbucket-to-github/</link>
       <pubDate>Thu, 03 Oct 2024 22:48:27 -0400</pubDate>
       
-      <guid>http://localhost:1313/posts/my-first-post/</guid>
+      <guid>http://localhost:1313/posts/bitbucket-to-github/</guid>
       
-      <description>&lt;h1 id=&#34;migrating-from-bitbucket-to-github&#34;&gt;Migrating from Bitbucket to Github&lt;/h1&gt;</description>
+      <description>&lt;h1 id=&#34;bitbucket-to-github-migration-tool-bb2gh&#34;&gt;Bitbucket to Github Migration Tool (bb2gh)&lt;/h1&gt;
+&lt;p&gt;At work, I have been tasked with migrating our Bitbucket Cloud repositories to Github. Since we are on Bitbucket Cloud, and Github&amp;rsquo;s &lt;a href=&#34;https://docs.github.com/en/migrations/using-github-enterprise-importer&#34;&gt;Enterprise Importer&lt;/a&gt; only supports Bitbucket Server, I wrote up a quick tool to help with the migration.&lt;/p&gt;
+&lt;p&gt;Following Github&amp;rsquo;s reccomended &lt;a href=&#34;https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/importing-an-external-git-repository-using-the-command-line&#34;&gt;migration process for external Git repositories&lt;/a&gt;, I used the steps they provided to create a script that would automate the process.&lt;/p&gt;
+&lt;p&gt;The tool, &lt;a href=&#34;https://github.com/JonSchaeffer/bb2gh&#34;&gt;bb2gh&lt;/a&gt;, is a simple Golang script that will take a list of Bitbucket repositories (notated in a YAML file), clone them to a temp directory, and push them to Github using the Github CLI tool.&lt;/p&gt;</description>
       
     </item>
     

@@ -66,12 +66,12 @@ theme = "hugo-blog-awesome"
     name = 'Posts'
     url = '/posts/'
     weight = 20
-  [[Languages.en-gb.menu.main]]
-    pageRef="about"
-    name = 'About'
-    url = '/about/'
-    weight = 30
-
+  # [[Languages.en-gb.menu.main]]
+  #   pageRef="about"
+  #   name = 'About'
+  #   url = '/about/'
+  #   weight = 30
+  #
   [[Languages.en-gb.menu.main]]
     pageRef="resume"
     name = 'Resume'
@@ -108,7 +108,7 @@ theme = "hugo-blog-awesome"
   # intro = "Yet Another BLog (YABL)"
   intro = "Jon Schaeffer | DevOps Engineer"
   name = "Jon Schaeffer"
-  description = "After working in tech for several years, computers still seem like magic to me. As a DevOps Engineer, I work with a lot of that magic. This blog is a way for me to share some of my learnings and what I find interesting. I hope you find it helpful."
+  description = "After working in tech for several years, computers still seem like magic to me. As a DevOps Engineer, I work with a lot of that magic. This blog is a way for me to share some of my learnings and what I find interesting."
 
 # Allow to override webmanifest options
 [Languages.en-gb.params.webmanifest]

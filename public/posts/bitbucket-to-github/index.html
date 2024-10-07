@@ -3,11 +3,11 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">404 Page not found | Jon Schaeffer</title>
-<meta property="og:title" content="404 Page not found | Jon Schaeffer" />
-<meta name="twitter:title" content="404 Page not found | Jon Schaeffer" />
-<meta itemprop="name" content="404 Page not found | Jon Schaeffer" />
-<meta name="application-name" content="404 Page not found | Jon Schaeffer" />
+<title itemprop="name">Bitbucket to Github Migration Tool (bb2gh) | Jon Schaeffer</title>
+<meta property="og:title" content="Bitbucket to Github Migration Tool (bb2gh) | Jon Schaeffer" />
+<meta name="twitter:title" content="Bitbucket to Github Migration Tool (bb2gh) | Jon Schaeffer" />
+<meta itemprop="name" content="Bitbucket to Github Migration Tool (bb2gh) | Jon Schaeffer" />
+<meta name="application-name" content="Bitbucket to Github Migration Tool (bb2gh) | Jon Schaeffer" />
 <meta property="og:site_name" content="Jon&#39;s Blog" />
 
 <meta name="description" content="Personal Blog">
@@ -18,34 +18,84 @@
 <meta property="og:locale" content="en-gb" />
 <meta name="language" content="en-gb" />
 
-  <link rel="alternate" hreflang="en-gb" href="http://localhost:1313/404.html" title="English" />
+  <link rel="alternate" hreflang="en-gb" href="http://localhost:1313/posts/bitbucket-to-github/" title="English" />
 
 
 
 
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2024-10-03T22:48:27-0400 />
+    <meta property="article:published_time" content=2024-10-03T22:48:27-0400 />
+    <meta property="og:url" content="http://localhost:1313/posts/bitbucket-to-github/" />
+
+    
+    <meta property="og:article:author" content="Jon Schaeffer" />
+    <meta property="article:author" content="Jon Schaeffer" />
+    <meta name="author" content="Jon Schaeffer" />
+    
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Bitbucket to Github Migration Tool (bb2gh)",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2024-10-03",
+        "description": "",
+        "wordCount":  198 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2024-10-03",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Jon Schaeffer"
+        }
+    }
+    </script>
 
 
 <meta name="generator" content="Hugo 0.135.0">
 
     
-    <meta property="og:url" content="http://localhost:1313/404.html">
+    <meta property="og:url" content="http://localhost:1313/posts/bitbucket-to-github/">
   <meta property="og:site_name" content="Jon Schaeffer">
-  <meta property="og:title" content="404 Page not found">
-  <meta property="og:description" content="Personal Blog">
+  <meta property="og:title" content="Bitbucket to Github Migration Tool (bb2gh)">
+  <meta property="og:description" content="Bitbucket to Github Migration Tool (bb2gh) At work, I have been tasked with migrating our Bitbucket Cloud repositories to Github. Since we are on Bitbucket Cloud, and Github’s Enterprise Importer only supports Bitbucket Server, I wrote up a quick tool to help with the migration.
+Following Github’s reccomended migration process for external Git repositories, I used the steps they provided to create a script that would automate the process.
+The tool, bb2gh, is a simple Golang script that will take a list of Bitbucket repositories (notated in a YAML file), clone them to a temp directory, and push them to Github using the Github CLI tool.">
   <meta property="og:locale" content="en_gb">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-10-03T22:48:27-04:00">
+    <meta property="article:modified_time" content="2024-10-03T22:48:27-04:00">
 
 
     
     
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="404 Page not found">
-  <meta name="twitter:description" content="Personal Blog">
+  <meta name="twitter:title" content="Bitbucket to Github Migration Tool (bb2gh)">
+  <meta name="twitter:description" content="Bitbucket to Github Migration Tool (bb2gh) At work, I have been tasked with migrating our Bitbucket Cloud repositories to Github. Since we are on Bitbucket Cloud, and Github’s Enterprise Importer only supports Bitbucket Server, I wrote up a quick tool to help with the migration.
+Following Github’s reccomended migration process for external Git repositories, I used the steps they provided to create a script that would automate the process.
+The tool, bb2gh, is a simple Golang script that will take a list of Bitbucket repositories (notated in a YAML file), clone them to a temp directory, and push them to Github using the Github CLI tool.">
 
 
     
 
-    <link rel="canonical" href="http://localhost:1313/404.html">
+    <link rel="canonical" href="http://localhost:1313/posts/bitbucket-to-github/">
     <link href="/style.min.2d921c18cf1ec555ffc03d59a8adc211c402c68c930c27d6a0c306ab175a8d09.css" rel="stylesheet">
     <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -103,7 +153,7 @@ stroke-linejoin="round" class="feather feather-home">
                 </li>
                 
                 <li>
-                    <a class="menu-link " href="/posts/">
+                    <a class="menu-link active" href="/posts/">
                         Posts
                     </a>
                     
@@ -132,11 +182,55 @@ stroke-linejoin="round" class="feather feather-home">
     </nav>
 </div>
 
-<div class="wrapper">
-    <main class="main-404" aria-label="Content">
-        <h1>404 NOT FOUND</h1>
-        <p>You just hit a route that doesn&#39;t exist.</p>
-    </main>
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Bitbucket to Github Migration Tool (bb2gh)</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2024-10-03T22:48:27-04:00" itemprop="datePublished"> 3 Oct 2024 </time>
+                </div>
+                
+            </header>
+            
+    
+    <details class="toc" ZgotmplZ>
+        <summary><b>Table of Contents</b></summary>
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#flags">Flags</a></li>
+        <li><a href="#example">Example</a></li>
+        <li><a href="#general-troubleshooting">General Troubleshooting</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </details>
+            <div class="page-content">
+                <h1 id="bitbucket-to-github-migration-tool-bb2gh">Bitbucket to Github Migration Tool (bb2gh)</h1>
+<p>At work, I have been tasked with migrating our Bitbucket Cloud repositories to Github. Since we are on Bitbucket Cloud, and Github&rsquo;s <a href="https://docs.github.com/en/migrations/using-github-enterprise-importer">Enterprise Importer</a> only supports Bitbucket Server, I wrote up a quick tool to help with the migration.</p>
+<p>Following Github&rsquo;s reccomended <a href="https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/importing-an-external-git-repository-using-the-command-line">migration process for external Git repositories</a>, I used the steps they provided to create a script that would automate the process.</p>
+<p>The tool, <a href="https://github.com/JonSchaeffer/bb2gh">bb2gh</a>, is a simple Golang script that will take a list of Bitbucket repositories (notated in a YAML file), clone them to a temp directory, and push them to Github using the Github CLI tool.</p>
+<p>The main drawback with the tool is that it will only migrate Git related history. Any pull requests, comments, issues, etc., will not be migrated.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="flags">Flags</h3>
+<blockquote>
+<p><code>-f</code> or <code>--file</code> - The file path to the <code>config.yaml</code> file.<br>
+<code>gc</code> or <code>--generate-config</code> - Generate a <code>config.yaml</code> file with sample data.<br>
+<code>h</code> or <code>--help</code> - Display the help menu.</p>
+</blockquote>
+<h3 id="example">Example</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./bb2gh -f config.yaml
+</span></span></code></pre></div><h3 id="general-troubleshooting">General Troubleshooting</h3>
+<p>If you are having pulling or pushing repositories, ensure you have the correct permissions in both Github and Bitbucket. Ensure you are properly authenticated with the Github CLI tool.</p>
+
+            </div>
+        </article></main>
 </div>
 <footer class="footer">
     <span class="footer_item"> </span>
