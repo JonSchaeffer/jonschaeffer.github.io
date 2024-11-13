@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en-gb"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions | Jon Schaeffer</title>
+<meta property="og:title" content="Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions | Jon Schaeffer" />
+<meta name="twitter:title" content="Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions | Jon Schaeffer" />
+<meta itemprop="name" content="Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions | Jon Schaeffer" />
+<meta name="application-name" content="Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions | Jon Schaeffer" />
+<meta property="og:site_name" content="Jon&#39;s Blog" />
+
+<meta name="description" content="Personal Blog">
+<meta itemprop="description" content="Personal Blog" />
+<meta property="og:description" content="Personal Blog" />
+<meta name="twitter:description" content="Personal Blog" />
+
+<meta property="og:locale" content="en-gb" />
+<meta name="language" content="en-gb" />
+
+  <link rel="alternate" hreflang="en-gb" href="http://localhost:1313/posts/managing-postgresql-pg-wal-growth/" title="English" />
+
+
+
+
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2024-11-13T17:33:08-0500 />
+    <meta property="article:published_time" content=2024-11-13T17:33:08-0500 />
+    <meta property="og:url" content="http://localhost:1313/posts/managing-postgresql-pg-wal-growth/" />
+
+    
+    <meta property="og:article:author" content="Jon Schaeffer" />
+    <meta property="article:author" content="Jon Schaeffer" />
+    <meta name="author" content="Jon Schaeffer" />
+    
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2024-11-13",
+        "description": "",
+        "wordCount":  1083 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2024-11-13",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Jon Schaeffer"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.138.0">
+
+    
+    <meta property="og:url" content="http://localhost:1313/posts/managing-postgresql-pg-wal-growth/">
+  <meta property="og:site_name" content="Jon Schaeffer">
+  <meta property="og:title" content="Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions">
+  <meta property="og:description" content="Recently, I’ve noticed that my TimescaleDB PostgreSQL clusters have experienced significant growth in their pg_wal volumes, sometimes expanding to over 20GB or even filling up the data disk entirely. This has occasionally led to the data volume running out of space quickly, causing access issues on the database. My goal is to spend less time fixing and worrying about these databases.
+The first step is identifying what causes the pg_wal folder to exceed its expected size (about 2GB). Potential causes include replication lag, incorrect WAL configuration, failed backups, etc.">
+  <meta property="og:locale" content="en_gb">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-11-13T17:33:08-05:00">
+    <meta property="article:modified_time" content="2024-11-13T17:33:08-05:00">
+
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions">
+  <meta name="twitter:description" content="Recently, I’ve noticed that my TimescaleDB PostgreSQL clusters have experienced significant growth in their pg_wal volumes, sometimes expanding to over 20GB or even filling up the data disk entirely. This has occasionally led to the data volume running out of space quickly, causing access issues on the database. My goal is to spend less time fixing and worrying about these databases.
+The first step is identifying what causes the pg_wal folder to exceed its expected size (about 2GB). Potential causes include replication lag, incorrect WAL configuration, failed backups, etc.">
+
+
+    
+
+    <link rel="canonical" href="http://localhost:1313/posts/managing-postgresql-pg-wal-growth/">
+    <link href="/style.min.2d921c18cf1ec555ffc03d59a8adc211c402c68c930c27d6a0c306ab175a8d09.css" rel="stylesheet">
+    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+<link rel="manifest" href="http://localhost:1313/site.webmanifest">
+
+<meta name="msapplication-config" content="/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+
+    </head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/js/theme.js"></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="http://localhost:1313/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="https://docs.google.com/document/d/1-2ixw4TBmX07AlVa-s6duvLcf9znZfRI1df3-axyenY/edit?usp=sharing">
+                        Resume
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+                
+                
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2024-11-13T17:33:08-05:00" itemprop="datePublished"> 13 Nov 2024 </time>
+                </div>
+                
+            </header>
+            
+    
+    <details class="toc" ZgotmplZ>
+        <summary><b>Table of Contents</b></summary>
+        <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#troubleshooting-steps">Troubleshooting steps</a>
+          <ul>
+            <li><a href="#wal-configuration">WAL Configuration</a></li>
+            <li><a href="#check-replication-slot-activity">Check Replication Slot Activity</a></li>
+            <li><a href="#checking-postgresql-logs-for-hints">Checking PostgreSQL logs for hints</a></li>
+          </ul>
+        </li>
+        <li><a href="#lets-fix-it">Let&rsquo;s Fix it!</a>
+          <ul>
+            <li><a href="#option-1">Option 1</a></li>
+            <li><a href="#option-2">Option 2</a></li>
+          </ul>
+        </li>
+        <li><a href="#takeaways">Takeaways</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </details>
+            <div class="page-content">
+                <p>Recently, I&rsquo;ve noticed that my TimescaleDB PostgreSQL clusters have experienced significant growth in their pg_wal volumes, sometimes expanding to over 20GB or even filling up the data disk entirely. This has occasionally led to the data volume running out of space quickly, causing access issues on the database. My goal is to spend less time fixing and worrying about these databases.</p>
+<p>The first step is identifying what causes the pg_wal folder to exceed its expected size (about 2GB). Potential causes include replication lag, incorrect WAL configuration, failed backups, etc.</p>
+<h3 id="troubleshooting-steps">Troubleshooting steps</h3>
+<p>High replication lag can cause WAL size to inflate. To check for this, we can examine the pg_stat_replication table. Running the query below provides statistics on our replication slots:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_replication</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></div><p>I will focus on <code>write_lag</code>, <code>flush_lag</code>, and <code>replay_lag</code>. If these values are high, it could indicate an issue with replicas streaming data from the primary node.</p>
+<p>Example output:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_replication</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">pid</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="n">usesysid</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="n">usename</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="n">application_name</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">client_addr</span><span class="w"> </span><span class="o">|</span><span class="w">               </span><span class="n">client_hostname</span><span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="n">client_port</span><span class="w"> </span><span class="o">|</span><span class="w">         </span><span class="n">backend_start</span><span class="w">         </span><span class="o">|</span><span class="w"> </span><span class="n">backend_xmin</span><span class="w"> </span><span class="o">|</span><span class="w">   </span><span class="k">state</span><span class="w">   </span><span class="o">|</span><span class="w">  </span><span class="n">sent_lsn</span><span class="w">   </span><span class="o">|</span><span class="w">  </span><span class="n">write_lsn</span><span class="w">  </span><span class="o">|</span><span class="w">  </span><span class="n">flush_lsn</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">replay_lsn</span><span class="w">  </span><span class="o">|</span><span class="w">    </span><span class="n">write_lag</span><span class="w">    </span><span class="o">|</span><span class="w">    </span><span class="n">flush_lag</span><span class="w">    </span><span class="o">|</span><span class="w">   </span><span class="n">replay_lag</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">sync_priority</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sync_state</span><span class="w"> </span><span class="o">|</span><span class="w">          </span><span class="n">reply_time</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">--------+----------+------------+------------------+-------------+----------------------------------------------+-------------+-------------------------------+--------------+-----------+-------------+-------------+-------------+-------------+-----------------+-----------------+-----------------+---------------+------------+-------------------------------
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w"> </span><span class="mi">434726</span><span class="w"> </span><span class="o">|</span><span class="w">    </span><span class="mi">16384</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">replicator</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">timescale</span><span class="o">-</span><span class="mi">2</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">111</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">timescale</span><span class="o">-</span><span class="mi">2</span><span class="p">.</span><span class="k">c</span><span class="p">.</span><span class="n">gumband</span><span class="o">-</span><span class="n">v2</span><span class="o">-</span><span class="n">production</span><span class="p">.</span><span class="n">internal</span><span class="w"> </span><span class="o">|</span><span class="w">       </span><span class="mi">29188</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2024</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">22</span><span class="w"> </span><span class="mi">13</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">51</span><span class="p">.</span><span class="mi">299949</span><span class="o">+</span><span class="mi">00</span><span class="w"> </span><span class="o">|</span><span class="w">              </span><span class="o">|</span><span class="w"> </span><span class="n">streaming</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="n">D</span><span class="o">/</span><span class="mi">6</span><span class="n">B679988</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="n">D</span><span class="o">/</span><span class="mi">6</span><span class="n">B679988</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="n">D</span><span class="o">/</span><span class="mi">6</span><span class="n">B679988</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="n">D</span><span class="o">/</span><span class="mi">6</span><span class="n">B679988</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">.</span><span class="mi">000575</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">.</span><span class="mi">001661</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">.</span><span class="mi">001782</span><span class="w"> </span><span class="o">|</span><span class="w">             </span><span class="mi">0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">async</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="mi">2024</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">13</span><span class="w"> </span><span class="mi">16</span><span class="p">:</span><span class="mi">34</span><span class="p">:</span><span class="mi">01</span><span class="p">.</span><span class="mi">159582</span><span class="o">+</span><span class="mi">00</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="mi">434744</span><span class="w"> </span><span class="o">|</span><span class="w">    </span><span class="mi">16384</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">replicator</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">timescale</span><span class="o">-</span><span class="mi">3</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">112</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">timescale</span><span class="o">-</span><span class="mi">3</span><span class="p">.</span><span class="k">c</span><span class="p">.</span><span class="n">gumband</span><span class="o">-</span><span class="n">v2</span><span class="o">-</span><span class="n">production</span><span class="p">.</span><span class="n">internal</span><span class="w"> </span><span class="o">|</span><span class="w">       </span><span class="mi">45948</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">2024</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">22</span><span class="w"> </span><span class="mi">13</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">53</span><span class="p">.</span><span class="mi">585643</span><span class="o">+</span><span class="mi">00</span><span class="w"> </span><span class="o">|</span><span class="w">              </span><span class="o">|</span><span class="w"> </span><span class="n">streaming</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="n">D</span><span class="o">/</span><span class="mi">6</span><span class="n">B679988</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="n">D</span><span class="o">/</span><span class="mi">6</span><span class="n">B679988</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="n">D</span><span class="o">/</span><span class="mi">6</span><span class="n">B679988</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="n">D</span><span class="o">/</span><span class="mi">6</span><span class="n">B679988</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">.</span><span class="mi">000618</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">.</span><span class="mi">001797</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">.</span><span class="mi">001901</span><span class="w"> </span><span class="o">|</span><span class="w">             </span><span class="mi">0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">async</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="mi">2024</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">13</span><span class="w"> </span><span class="mi">16</span><span class="p">:</span><span class="mi">34</span><span class="p">:</span><span class="mi">00</span><span class="p">.</span><span class="mi">357485</span><span class="o">+</span><span class="mi">00</span><span class="w">
+</span></span></span></code></pre></div><p>In my case, the <code>write_lag</code>, <code>flush_lag</code>, and <code>replay_lag</code> are all very low, indicating that the replicas are keeping up with the primary server&rsquo;s WAL generation. This appears to be OK.</p>
+<h4 id="wal-configuration">WAL Configuration</h4>
+<p>My <code>/etc/patroni/patroni.yml</code> configuration is set using an Ansible script, so I don&rsquo;t expect any issues here. However, it&rsquo;s good to double-check that my values are set accordingly.</p>
+<p>Here are my main wal settings:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">min_wal_size</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;512MB&#34;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">max_wal_size</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;1GB&#34;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">wal_level</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;replica&#34;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">wal_keep_size</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;2GB&#34;</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">max_wal_senders</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;10&#34;</span><span class="w">
+</span></span></span></code></pre></div><p>This does not explain why the Primary node&rsquo;s <code>pg_wal</code> folder is 18GB. Let&rsquo;s keep going.</p>
+<h4 id="check-replication-slot-activity">Check Replication Slot Activity</h4>
+<p>We may be able to extrapolate some information from replication slot activity. If we see a lot of inactive slots that could indicate to us why our <code>pg_wal</code> directory is filling up. Lets list all replication slots and verify their activity status.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="n">slot_name</span><span class="p">,</span><span class="w"> </span><span class="n">active</span><span class="p">,</span><span class="w"> </span><span class="n">restart_lsn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="n">slot_name</span><span class="p">,</span><span class="w"> </span><span class="n">active</span><span class="p">,</span><span class="w"> </span><span class="n">restart_lsn</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_replication_slots</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">slot_name</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">active</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">restart_lsn</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-------------+--------+-------------
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w"> </span><span class="n">timescale_2</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">t</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="n">D</span><span class="o">/</span><span class="mi">6</span><span class="n">B8FA368</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="n">timescale_3</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">t</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="mi">1</span><span class="n">D</span><span class="o">/</span><span class="mi">6</span><span class="n">B8FA368</span><span class="w">
+</span></span></span></code></pre></div><p>Both replication slots (timescale_2 and timescale_3) are active, which is good because it means they are being used by the cluster&rsquo;s replicas.</p>
+<h4 id="checking-postgresql-logs-for-hints">Checking PostgreSQL logs for hints</h4>
+<p>Ahh, PostgreSQL logs. I should have checked here first! Looking at the logs, the issue is pretty obvious:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">ERROR: [041]: unable to get info for path/file &#39;/tmp/pgbackrest/main.stop&#39;: [13] Permission denied 2024-11-13 16:46:40 UTC [434699-211272] 
+</span></span><span class="line"><span class="cl">LOG: archive command failed with exit code 41 2024-11-13 16:46:40 UTC [434699-211273] 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">DETAIL: The failed archive command was: pgbackrest --stanza=main archive-push pg_wal/000000030000001900000003 2024-11-13 16:46:40 UTC [434699-211274] 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">WARNING: archiving write-ahead log file &#34;000000030000001900000003&#34; failed too many times, will try again later
+</span></span></code></pre></div><p>I use <code>pgbackrest</code> to backup my clusters. I have a <code>full</code> backup that runs once every week, and a <code>diff</code> backup that runs every night. According to the logs, postgres is unable to write in the <code>/tmp/pgbackrest</code> folder. Pgbackrest will place its lock file here when performing backups.</p>
+<p>Long story short, the default <code>lock-path</code> folder for <code>pgbackrest</code> is located at <code>tmp/pgbackrest</code>. When running a script that triggers <code>pgbackrest</code>, the <code>tmp</code> folder gets created as root. Which is inaccessible by <code>postgres</code>.</p>
+<h3 id="lets-fix-it">Let&rsquo;s Fix it!</h3>
+<h4 id="option-1">Option 1</h4>
+<p>First, lets set the owner of the problem directory to <code>postgres:postgres</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo chown postgres:postgres /tmp/pgbackrest
+</span></span></code></pre></div><p>Now, I can run the pgbackrest backup command
+<code>pgbackrest --stanza=main backup --type full</code></p>
+<p>Note: This may fail a couple times to start as postgres recycles unneeded wal segments. At least this is what happened in my case.</p>
+<h6 id="making-it-repeatable">Making it Repeatable</h6>
+<p>To ensure that this tmp directory is always created with Postgres as the owner, we can use a tool called <code>systemd-tmpfiles</code>. On reboot, it will ensure that the specified folder is present with the correct ownership. Our conf file would look like this:</p>
+<pre tabindex="0"><code class="language-conf" data-lang="conf">d /tmp/pgbackrest 750 postgres postgres -
+</code></pre><p>We can test that this works by deleting the folder, then running:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo systemd-tmpfiles --create /etc/tmpfiles.d/postgres.conf
+</span></span></code></pre></div><p>Performing a reboot, we will see the <code>/tmp/pgbackrest</code> folder created with the correct permissions.</p>
+<h4 id="option-2">Option 2</h4>
+<p>There is a more stateful and descriptive way of doing this. We can set the <code>lock-path</code> in our <code>pgbackrest.conf</code>. Essentially, you need to add <code>lock-path=/path/to/dir</code> to your <code>pgbackrest.conf</code> file. This should make the folder persistent on reboots. We will only have to create the folder and set permissions once.</p>
+<p>I deployed <code>pgbackrest</code> with a custom ansible playbook, so I can update the config in one place and propagate it to all of my nodes.</p>
+<p>First, we will update the <code>pgbackrest.conf</code> file:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">[</span>global<span class="o">]</span>
+</span></span><span class="line"><span class="cl">repo1-type<span class="o">=</span>gcs
+</span></span><span class="line"><span class="cl">repo1-gcs-bucket<span class="o">={{</span> gcs_bucket_name <span class="o">}}</span>
+</span></span><span class="line"><span class="cl">repo1-gcs-endpoint<span class="o">=</span>storage.googleapis.com
+</span></span><span class="line"><span class="cl">repo1-gcs-key-type<span class="o">=</span>service
+</span></span><span class="line"><span class="cl">repo1-gcs-key<span class="o">=</span>/path/to/key
+</span></span><span class="line"><span class="cl">repo1-retention-full<span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#Here is where we can add the lock-path</span>
+</span></span><span class="line"><span class="cl">lock-path<span class="o">=</span>/home/postgres/pgbackrest-backup
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>main<span class="o">]</span>
+</span></span><span class="line"><span class="cl">pg1-path<span class="o">=</span>/mnt/postgresql/15/main
+</span></span><span class="line"><span class="cl">pg1-user<span class="o">=</span>postgres
+</span></span></code></pre></div><p>Second, I will adjust my <code>deploy_pgbackrest.yaml</code> to make sure the <code>/home/postgres/pgbackrest-backup</code> folder is present on the system with the correct permissions.</p>
+<pre tabindex="0"><code class="language-ansible" data-lang="ansible">    - name: Create pgbackrest-backup directory
+      file:
+        path: /home/postgres/pgbackrest-backup
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: &#34;750&#34;
+</code></pre><p>This step should take care of it.</p>
+<p>I can deploy the updated config with <code>ansible-playbook deploy_pgbackrest.yml --ask-vault-pass</code>.</p>
+<p>Now we don&rsquo;t have to worry about the <code>lock-path</code> directory being deleted from the <code>/tmp</code> directory when the system is rebooted.</p>
+<p>This approach is preferable because the steps are well-defined in my Ansible script. It allows me to easily see from the <code>pgbackrest.conf</code> file where the backups are meant to take place, making troubleshooting cleaner and more straightforward. I generally think this approach is a little cleaner, too.</p>
+<h3 id="takeaways">Takeaways</h3>
+<p>This experience was a good reminder of the importance of monitoring and maintaining our database environments. Fortunately, this issue only affected my non-production PostgreSQL clusters, allowing me to address it without impacting production. In production, I have  alerting mechanisms to notify me if disks exceed 80% capacity, nodes become unavailable, or backups fail to complete.</p>
+<p>This was a fun way to spend an afternoon and it narrowed down some frustrations in our testing environments. Moving forward, I may consider implementing alerts for our non-production clusters, although I&rsquo;m cautious about potential alert fatigue obscuring critical notifications.</p>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/JonSchaeffer" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="https://www.linkedin.com/in/jon-schaeffer/" target="_blank" rel="noopener noreferrer me"
+    title="Linkedin">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect x="2" y="9" width="4" height="12"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2024 Jon Schaeffer.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
+    </small>
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+    
+    
+        
+    
+
+    
+    
+        
+    
+
+
+
+    
+    <script async src="http://localhost:1313/js/main.js" ></script>
+
+    
+
+</body>
+</html>

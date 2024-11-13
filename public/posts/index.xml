@@ -6,7 +6,19 @@
     <description>Recent content in Posts on Jon Schaeffer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
-    <lastBuildDate>Thu, 03 Oct 2024 22:48:27 -0400</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 13 Nov 2024 17:33:08 -0500</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Managing Postgresql Pg Wal Growth</title>
+      <link>http://localhost:1313/posts/managing-postgresql-pg-wal-growth/</link>
+      <pubDate>Wed, 13 Nov 2024 17:33:08 -0500</pubDate>
+      
+      <guid>http://localhost:1313/posts/managing-postgresql-pg-wal-growth/</guid>
+      
+      <description>&lt;p&gt;Recently, I&amp;rsquo;ve noticed that my TimescaleDB PostgreSQL clusters have experienced significant growth in their pg_wal volumes, sometimes expanding to over 20GB or even filling up the data disk entirely. This has occasionally led to the data volume running out of space quickly, causing access issues on the database. My goal is to spend less time fixing and worrying about these databases.&lt;/p&gt;
+&lt;p&gt;The first step is identifying what causes the pg_wal folder to exceed its expected size (about 2GB). Potential causes include replication lag, incorrect WAL configuration, failed backups, etc.&lt;/p&gt;</description>
+      
+    </item>
+    
     <item>
       <title>Bitbucket to Github Migration Tool (bb2gh)</title>
       <link>http://localhost:1313/posts/bitbucket-to-github/</link>

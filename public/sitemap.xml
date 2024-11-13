@@ -2,13 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/my-first-post/</loc>
-    <lastmod>2024-10-03T22:48:27-04:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2024-10-03T22:48:27-04:00</lastmod>
+    <lastmod>2024-11-13T17:33:08-05:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/managing-postgresql-pg-wal-growth/</loc>
+    <lastmod>2024-11-13T17:33:08-05:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2024-11-13T17:33:08-05:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/bitbucket-to-github/</loc>
     <lastmod>2024-10-03T22:48:27-04:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/pages/about/</loc>
