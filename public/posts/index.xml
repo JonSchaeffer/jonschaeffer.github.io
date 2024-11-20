@@ -6,9 +6,21 @@
     <description>Recent content in Posts on Jon Schaeffer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
-    <lastBuildDate>Wed, 13 Nov 2024 17:33:08 -0500</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 20 Nov 2024 17:05:55 -0500</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Managing Postgresql Pg Wal Growth</title>
+      <title>Migration from Nginx to Istio: HTTP Rewrites</title>
+      <link>http://localhost:1313/posts/nginxtoistiomigrationhttprewrites/</link>
+      <pubDate>Wed, 20 Nov 2024 17:05:55 -0500</pubDate>
+      
+      <guid>http://localhost:1313/posts/nginxtoistiomigrationhttprewrites/</guid>
+      
+      <description>&lt;p&gt;I am going through the process of migrating from &lt;a href=&#34;https://github.com/kubernetes/ingress-nginx&#34;&gt;NGINX Ingress&lt;/a&gt; to &lt;a href=&#34;https://istio.io/latest/&#34;&gt;Istio&lt;/a&gt; in our development Kubernetes cluster. My organization wants to start taking advantage of service mesh capabilities and progressive deployments with &lt;a href=&#34;https://flagger.app/&#34;&gt;Flagger&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We experienced one growing pain that I thought was worth documenting. A developer wrote an update to one of our microservices that introduced a new endpoint accepting a POST request. Testing in our staging environment had the endpoint working as expected. However, in our development environment where Istio is deployed, they were unable to hit the endpoint correctly, receiving a 404 error in Postman. This was unexpected.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions</title>
       <link>http://localhost:1313/posts/managing-postgresql-pg-wal-growth/</link>
       <pubDate>Wed, 13 Nov 2024 17:33:08 -0500</pubDate>
       

@@ -3,11 +3,11 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Posts | Jon Schaeffer</title>
-<meta property="og:title" content="Posts | Jon Schaeffer" />
-<meta name="twitter:title" content="Posts | Jon Schaeffer" />
-<meta itemprop="name" content="Posts | Jon Schaeffer" />
-<meta name="application-name" content="Posts | Jon Schaeffer" />
+<title itemprop="name">Migration from Nginx to Istio: HTTP Rewrites | Jon Schaeffer</title>
+<meta property="og:title" content="Migration from Nginx to Istio: HTTP Rewrites | Jon Schaeffer" />
+<meta name="twitter:title" content="Migration from Nginx to Istio: HTTP Rewrites | Jon Schaeffer" />
+<meta itemprop="name" content="Migration from Nginx to Istio: HTTP Rewrites | Jon Schaeffer" />
+<meta name="application-name" content="Migration from Nginx to Istio: HTTP Rewrites | Jon Schaeffer" />
 <meta property="og:site_name" content="Jon&#39;s Blog" />
 
 <meta name="description" content="Personal Blog">
@@ -18,20 +18,12 @@
 <meta property="og:locale" content="en-gb" />
 <meta name="language" content="en-gb" />
 
-  <link rel="alternate" hreflang="en-gb" href="http://localhost:1313/posts/" title="English" />
+  <link rel="alternate" hreflang="en-gb" href="http://localhost:1313/posts/nginxtoistiomigrationhttprewrites/" title="English" />
 
 
 
 
 
-    
-    
-    
-    
-    
-    <link rel="first" href="/posts/" />
-    <link rel="last" href="/posts/" />
-    
     
     
     
@@ -39,7 +31,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:article:published_time" content=2024-11-20T17:05:55-0500 />
     <meta property="article:published_time" content=2024-11-20T17:05:55-0500 />
-    <meta property="og:url" content="http://localhost:1313/posts/" />
+    <meta property="og:url" content="http://localhost:1313/posts/nginxtoistiomigrationhttprewrites/" />
 
     
     <meta property="og:article:author" content="Jon Schaeffer" />
@@ -54,14 +46,14 @@
     {
         "@context": "http://schema.org",
         "@type": "Article",
-        "headline": "Posts",
+        "headline": "Migration from Nginx to Istio: HTTP Rewrites",
         "author": {
         "@type": "Person",
         "name": ""
         },
         "datePublished": "2024-11-20",
         "description": "",
-        "wordCount":  0 ,
+        "wordCount":  284 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-11-20",
         "image": {
@@ -79,26 +71,29 @@
 <meta name="generator" content="Hugo 0.138.0">
 
     
-    <meta property="og:url" content="http://localhost:1313/posts/">
+    <meta property="og:url" content="http://localhost:1313/posts/nginxtoistiomigrationhttprewrites/">
   <meta property="og:site_name" content="Jon Schaeffer">
-  <meta property="og:title" content="Posts">
-  <meta property="og:description" content="Personal Blog">
+  <meta property="og:title" content="Migration from Nginx to Istio: HTTP Rewrites">
+  <meta property="og:description" content="I am going through the process of migrating from NGINX Ingress to Istio in our development Kubernetes cluster. My organization wants to start taking advantage of service mesh capabilities and progressive deployments with Flagger.
+We experienced one growing pain that I thought was worth documenting. A developer wrote an update to one of our microservices that introduced a new endpoint accepting a POST request. Testing in our staging environment had the endpoint working as expected. However, in our development environment where Istio is deployed, they were unable to hit the endpoint correctly, receiving a 404 error in Postman. This was unexpected.">
   <meta property="og:locale" content="en_gb">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-11-20T17:05:55-05:00">
+    <meta property="article:modified_time" content="2024-11-20T17:05:55-05:00">
 
 
     
     
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Posts">
-  <meta name="twitter:description" content="Personal Blog">
+  <meta name="twitter:title" content="Migration from Nginx to Istio: HTTP Rewrites">
+  <meta name="twitter:description" content="I am going through the process of migrating from NGINX Ingress to Istio in our development Kubernetes cluster. My organization wants to start taking advantage of service mesh capabilities and progressive deployments with Flagger.
+We experienced one growing pain that I thought was worth documenting. A developer wrote an update to one of our microservices that introduced a new endpoint accepting a POST request. Testing in our staging environment had the endpoint working as expected. However, in our development environment where Istio is deployed, they were unable to hit the endpoint correctly, receiving a 404 error in Postman. This was unexpected.">
 
 
     
 
-    <link rel="canonical" href="http://localhost:1313/posts/">
-    <link href="/posts/index.xml" rel="alternate" type="application/rss+xml" title="Jon Schaeffer">
-    <link href="/posts/index.xml" rel="feed" type="application/rss+xml" title="Jon Schaeffer">
+    <link rel="canonical" href="http://localhost:1313/posts/nginxtoistiomigrationhttprewrites/">
     <link href="/style.min.2d921c18cf1ec555ffc03d59a8adc211c402c68c930c27d6a0c306ab175a8d09.css" rel="stylesheet">
     <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -184,74 +179,40 @@ stroke-linejoin="round" class="feather feather-home">
         </div>
     </nav>
 </div>
-<div class="wrapper list-page">
-    <header class="header">
-        <h1 class="header-title center">Posts</h1>
-    </header>
+
+<div class="wrapper post">
     <main class="page-content" aria-label="Content">
-        
-        
-        <h2 class="post-year">2024</h2>
-
-        
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/posts/nginxtoistiomigrationhttprewrites/">Migration from Nginx to Istio: HTTP Rewrites</a>
-    </h4>
+        <article>
+            <header class="header">
+                <h1 class="header-title">Migration from Nginx to Istio: HTTP Rewrites</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2024-11-20T17:05:55-05:00" itemprop="datePublished"> 20 Nov 2024 </time>
+                </div>
+                
+            </header>
+            
     
-    
-    
-    
-    <time class="post-item-meta" datetime="2024-11-20T17:05:55-0500">
-        20 Nov 2024
-        
-    </time>
-</article>
+    <details class="toc" ZgotmplZ>
+        <summary><b>Table of Contents</b></summary>
+        <nav id="TableOfContents"></nav>
+    </details>
+            <div class="page-content">
+                <p>I am going through the process of migrating from <a href="https://github.com/kubernetes/ingress-nginx">NGINX Ingress</a> to <a href="https://istio.io/latest/">Istio</a> in our development Kubernetes cluster. My organization wants to start taking advantage of service mesh capabilities and progressive deployments with <a href="https://flagger.app/">Flagger</a>.</p>
+<p>We experienced one growing pain that I thought was worth documenting. A developer wrote an update to one of our microservices that introduced a new endpoint accepting a POST request. Testing in our staging environment had the endpoint working as expected. However, in our development environment where Istio is deployed, they were unable to hit the endpoint correctly, receiving a 404 error in Postman. This was unexpected.</p>
+<p>After hearing about this, I used k9s to monitor logs for the deployment. I opened Postman and hit the new endpoint with a POST request. Interestingly enough, the deployment logged a GET request. That was not the expected outcome.</p>
+<p>After some troubleshooting that didn&rsquo;t lead anywhere, I tried setting my endpoint in Postman to use HTTPS. The request worked as expected and showed up as a POST request in the microservice! But why?</p>
+<p>Doing some research I quickly found out the rationale behind this behavior. When rewriting http requests Nginx-Ingress and Istio take different approaches. Nginx-Ingress will post a 301 (Moved Permanently) HTTP status code. The POST request is unchanged while being rewritten as an HTTPS request, and sent along to the system.</p>
+<p>Istio on the other hand posts a 307 (Permanent Redirect) HTTP status code. As part of the HTTP/1.1 specification, the POST request gets rewritten to a GET request. The reason being is that it is a safer approach.</p>
+<p>The fix here is simply using https when hitting our API.</p>
+<p>More information about 3xx rewrites and rational can be found <a href="https://www.rfc-editor.org/rfc/rfc9110.html#name-redirection-3xx">here</a>.</p>
 
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/posts/managing-postgresql-pg-wal-growth/">Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions</a>
-    </h4>
-    
-    
-    
-    
-    <time class="post-item-meta" datetime="2024-11-13T17:33:08-0500">
-        13 Nov 2024
-        
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/posts/bitbucket-to-github/">Bitbucket to Github Migration Tool (bb2gh)</a>
-    </h4>
-    
-    
-    
-    
-    <time class="post-item-meta" datetime="2024-10-03T22:48:27-0400">
-        3 Oct 2024
-        
-    </time>
-</article>
-
-
-         
-
-         
-
-    </main>
-</div><footer class="footer">
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
     <span class="footer_item"> </span>
     &nbsp;
 
