@@ -71,7 +71,11 @@ theme = "hugo-blog-awesome"
   #   name = 'About'
   #   url = '/about/'
   #   weight = 30
-  #
+  [[Languages.en-gb.menu.main]]
+    pageRef="book-reviews"
+    name = 'Book Reviews'
+    url = '/book-reviews/'
+    weight = 20
   [[Languages.en-gb.menu.main]]
     pageRef="resume"
     name = 'Resume'
@@ -86,7 +90,7 @@ theme = "hugo-blog-awesome"
   # the default value is set to 'auto'.
   # You can take a look at layouts/index.html for more information.
   description = "Personal Blog"
-  mainSections = ['posts']
+  mainSections = ['posts', 'book-reviews']
   toc = true # set to false to disable table of contents 'globally'
   tocOpen = false # set to true to open table of contents by default
   goToTop = true # set to false to disable 'go to top' button

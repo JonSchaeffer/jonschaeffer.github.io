@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Book-Reviews on Jon Schaeffer</title>
+    <link>http://localhost:1313/book-reviews/</link>
+    <description>Recent content in Book-Reviews on Jon Schaeffer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Tue, 21 Jan 2025 17:05:55 -0500</lastBuildDate><atom:link href="http://localhost:1313/book-reviews/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pines by Blake Crouch</title>
+      <link>http://localhost:1313/book-reviews/pines/</link>
+      <pubDate>Tue, 21 Jan 2025 17:05:55 -0500</pubDate>
+      
+      <guid>http://localhost:1313/book-reviews/pines/</guid>
+      
+      <description>&lt;p&gt;&lt;em&gt;Pines&lt;/em&gt; is the first book in the &lt;em&gt;Wayward Pines&lt;/em&gt; series written by Blake Crouch. The story follows Ethan, a Secret Service agent sent to the town of Wayward Pines to locate a missing colleague. As Ethan spends more time in the town, he begins to notice oddities. The deeper he digs, the more the town&amp;rsquo;s secrets unravel, sending him—and you—on a crazy adventure that you won’t want to put down.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Misery by Stephen King</title>
+      <link>http://localhost:1313/book-reviews/misery/</link>
+      <pubDate>Wed, 15 Jan 2025 17:05:55 -0500</pubDate>
+      
+      <guid>http://localhost:1313/book-reviews/misery/</guid>
+      
+      <description>&lt;p&gt;&lt;em&gt;Misery&lt;/em&gt; is my first Stephen King novel. Actually, I tried to read this years ago but put it down. I had a hard time getting into the novel mostly due to King’s very descriptive writing style. Having read more recently I decided to give it another try.&lt;/p&gt;
+&lt;p&gt;In &lt;em&gt;Misery&lt;/em&gt;, you share a confined world with Paul Sheldon, a prolific and successful writer. Paul awakens from a car accident in an unfamiliar room, with his legs kneecapped and in agonizing pain. He soon meets Annie Wilkes, his seemingly kind but deeply unhinged “rescuer” who also claims to be his &lt;em&gt;number one fan&lt;/em&gt;. What starts as a rescue quickly transforms into a harrowing ordeal as Paul realizes Annie has no intention of letting him leave.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

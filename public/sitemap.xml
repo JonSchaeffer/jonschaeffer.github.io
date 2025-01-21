@@ -2,8 +2,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://localhost:1313/book-reviews/</loc>
+    <lastmod>2025-01-21T17:05:55-05:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2024-11-20T17:05:55-05:00</lastmod>
+    <lastmod>2025-01-21T17:05:55-05:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/book-reviews/pines/</loc>
+    <lastmod>2025-01-21T17:05:55-05:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/book-reviews/misery/</loc>
+    <lastmod>2025-01-15T17:05:55-05:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/nginxtoistiomigrationhttprewrites/</loc>
     <lastmod>2024-11-20T17:05:55-05:00</lastmod>
