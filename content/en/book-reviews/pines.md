@@ -1,8 +1,8 @@
-+++
-title = 'Pines by Blake Crouch'
-date = 2025-01-21T17:05:55-05:00
-draft = false
-+++
+---
+title: 'Pines by Blake Crouch'
+date: 2025-01-21T17:05:55-05:00
+draft: false
+---
 
 *Pines* is the first book in the *Wayward Pines* series written by Blake Crouch. The story follows Ethan, a Secret Service agent sent to the town of Wayward Pines to locate a missing colleague. As Ethan spends more time in the town, he begins to notice oddities. The deeper he digs, the more the town's secrets unravel, sending him—and you—on a crazy adventure that you won’t want to put down.
 
@@ -20,6 +20,4 @@ On the other hand there were things I think the book could improve on.
 
 In conclusion, *Pines* is exactly what I was looking for from another Crouch novel. It is fast paced, mysterious, and had a satisfying twist that kept me engaged. I am looking forward to reading the 2nd book in the series.
 
-![Pines by Blake Crouch](pines.jpg "Pines by Blake Crouch") 
-```
-
+![Pines by Blake Crouch](pines.jpg "Pines by Blake Crouch")

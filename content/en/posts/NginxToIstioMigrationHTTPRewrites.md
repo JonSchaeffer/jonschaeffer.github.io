@@ -1,8 +1,8 @@
-+++
-title = 'Migration from Nginx to Istio: HTTP Rewrites'
-date = 2024-11-20T17:05:55-05:00
-draft = false
-+++
+---
+title: 'Migration from Nginx to Istio: HTTP Rewrites'
+date: 2024-11-20T17:05:55-05:00
+draft: false
+---
 
 I am going through the process of migrating from [NGINX Ingress](https://github.com/kubernetes/ingress-nginx) to [Istio](https://istio.io/latest/) in our development Kubernetes cluster. My organization wants to start taking advantage of service mesh capabilities and progressive deployments with [Flagger](https://flagger.app/).
 

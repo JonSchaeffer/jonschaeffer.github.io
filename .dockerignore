@@ -1,0 +1,7 @@
+node_modules/
+public/
+resources/_gen/
+.git/
+.DS_Store
+tina/__generated__/
+static/admin/

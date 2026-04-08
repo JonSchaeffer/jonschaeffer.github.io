@@ -1,8 +1,8 @@
-+++
-title = 'Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions'
-date = 2024-11-13T17:33:08-05:00
-draft = false
-+++
+---
+title: 'Managing PostgreSQL pg_wal Growth: Troubleshooting and Solutions'
+date: 2024-11-13T17:33:08-05:00
+draft: false
+---
 
 
 Recently, I've noticed that my TimescaleDB PostgreSQL clusters have experienced significant growth in their pg_wal volumes, sometimes expanding to over 20GB or even filling up the data disk entirely. This has occasionally led to the data volume running out of space quickly, causing access issues on the database. My goal is to spend less time fixing and worrying about these databases.

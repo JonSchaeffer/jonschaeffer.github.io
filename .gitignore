@@ -1,0 +1,11 @@
+# Hugo build output
+public/
+resources/_gen/
+
+# TinaCMS
+node_modules/
+tina/__generated__/
+static/admin/
+
+# OS
+.DS_Store

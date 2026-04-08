@@ -1,8 +1,8 @@
-+++
-title = 'Bitbucket to Github Migration Tool (bb2gh)'
-date = 2024-10-03T22:48:27-04:00
-draft = false
-+++
+---
+title: 'Bitbucket to Github Migration Tool (bb2gh)'
+date: 2024-10-03T22:48:27-04:00
+draft: false
+---
 
 # Bitbucket to Github Migration Tool (bb2gh)
 At work, I have been tasked with migrating our Bitbucket Cloud repositories to Github. Since we are on Bitbucket Cloud, and Github's [Enterprise Importer](https://docs.github.com/en/migrations/using-github-enterprise-importer) only supports Bitbucket Server, I wrote up a quick tool to help with the migration.

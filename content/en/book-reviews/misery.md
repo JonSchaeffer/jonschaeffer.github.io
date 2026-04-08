@@ -1,8 +1,8 @@
-+++
-title = 'Misery by Stephen King'
-date = 2025-01-15T17:05:55-05:00
-draft = false
-+++
+---
+title: 'Misery by Stephen King'
+date: 2025-01-15T17:05:55-05:00
+draft: false
+---
 
 *Misery* is my first Stephen King novel. Actually, I tried to read this years ago but put it down. I had a hard time getting into the novel mostly due to King’s very descriptive writing style. Having read more recently I decided to give it another try. 
 
